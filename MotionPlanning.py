@@ -15,6 +15,7 @@
 #   0 = Navigable space
 #   1 = Occupied space
 
+#astar
 
 grid = [[0, 0, 1, 0, 0, 0],
         [0, 0, 1, 0, 0, 0],
