@@ -14,7 +14,7 @@
 # Grid format:
 #   0 = Navigable space
 #   1 = Occupied space
-import numpy as np
+
 
 grid = [[0, 0, 1, 0, 0, 0],
         [0, 0, 1, 0, 0, 0],
@@ -32,84 +32,49 @@ delta = [[-1, 0], # go up
 
 delta_name = ['^', '<', 'v', '>']
 
-# blocked coordinates
-blocked_list= []
-for i in range(len(grid)):
-    for j in range(len(grid[0])):
-        if grid[i][j] ==1:
-            blocked_list.append([j,i])
-
-def check_surrounding(current_position, open_list, g_value):
-    for move in delta:
-        #1 and 2 since current position [g_value, x, y]
-        new_x = current_position[1] - move[0]
-        new_y = current_position[2] - move[1]
-        # check if out of boundary
-        # action move delta current position + delta
-        if (new_x < 0) or (new_y <0) or (new_x > len(grid[0])) or (new_y > len(grid)):
-            #print('skipping')
-            continue
-        else:
-            #check if it is in the blocked list    
-            if not [new_x,new_y] in blocked_list:
-                #created open coordinates
-                open_list.append([g_value,new_x,new_y])
-    return open_list
-def move(open_list,g_value):
-    return 
-
 def search(grid,init,goal,cost):
     # ----------------------------------------
     # insert code here
     # ----------------------------------------
-
-    open_list=[]
-    checked =[]
-    path=[]
-    g_value = 0
-    current_position=[]
-
-    found  = False
-    resign = False
-
-    # initial starting point
-    open_list.append([0,init[0],init[1]])
-    current_position = [0,init[0],init[1]]
+    closed = [[0 for row in range(len(grid[0]))] for col in range(len(grid[1]))]
+    closed[init[0]][init[1]] = 1
 
     x = init[0]
-    y = init[1]   
-    
-    print('open_list',open_list)
-    print('current_position',current_position)
-    # test = [[5,1,0],[4,0,1],[8,4,5],[9,2,3]]
-    # print("current_position", sorted(test))
-    
-    # action while  
+    y = init[1]
+    g = 0
+
+    open = [[g,x,y]]
+
+    found = False
+    resign = False
+
     while found is False and resign is False:
-        if len(open_list) == 0:
-            print ('fail')
+        if len(open) ==0:
+            print('fail')
             resign = True
-            ##### Search ended without sucess
         else:
-            path.append((g_value, x,y))
-            #checked
-            # checked.append()
-            #remove from open_list()
-            # openlist.remove()
-            g_value+=1
-            open_list = check_surrounding(current_position,open_list,g_value)
+            open.sort()
+            open.reverse()
+            next = open.pop()
+            x=next[1]
+            y=next[2]
+            g=next[0]
 
-            #move
-            open_list = sorted(open_list)
-            current_position = open_list[0]
+            if x == goal[0] and y == goal[1]:
+                found = True
+                print(next)
 
-    # return path
-print (search(grid,init,goal,cost))
+            else:
+                for i in range(len(delta)):
+                    x2 = x + delta[i][0]
+                    y2 = y + delta[i][1]
 
+                    if x2 >= 0 and x2< len(grid) and y2 >=0 and y2 <len(grid[0]):
+                        if closed[x2][y2] == 0 and grid[x2][y2] ==0:
+                            g2 = g + cost
+                            open.append([g2,x2,y2])
+                            closed[x2][y2] = 1
 
+    return next
 
-
-
-
-
-
+print(search(grid,init,goal,cost))
