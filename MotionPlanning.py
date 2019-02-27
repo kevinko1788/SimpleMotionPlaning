@@ -94,7 +94,7 @@ def search(grid,init,goal,cost):
                 y = y2
 
             for i in range(len(policy)):
-                print policy[i]
+                print(policy[i])
 
 
 
