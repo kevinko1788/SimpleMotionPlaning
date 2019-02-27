@@ -38,7 +38,8 @@ def search(grid,init,goal,cost):
     # ----------------------------------------
     closed = [[0 for row in range(len(grid[0]))] for col in range(len(grid[1]))]
     closed[init[0]][init[1]] = 1
-
+    expand = [[-1 for row in range(len(grid[0]))] for col in range(len(grid[1]))]
+    count = 0
     x = init[0]
     y = init[1]
     g = 0
@@ -59,10 +60,13 @@ def search(grid,init,goal,cost):
             x=next[1]
             y=next[2]
             g=next[0]
+            expand[x][y] = count
+            count+=1
+
 
             if x == goal[0] and y == goal[1]:
                 found = True
-                print(next)
+                return expand
 
             else:
                 for i in range(len(delta)):
@@ -75,6 +79,6 @@ def search(grid,init,goal,cost):
                             open.append([g2,x2,y2])
                             closed[x2][y2] = 1
 
-    return next
 
 print(search(grid,init,goal,cost))
+
